@@ -26,9 +26,16 @@ export class FoodList extends React.Component {
                 isSelected={foodElement.isSelected}/>
         });
         return (<ul
-            style={{listStyle: 'none'}}
+            style={styles}
             onClick={this.onClickHandler}>
             {listElements}
         </ul>);
     }
 }
+
+const styles = {
+    listStyle: 'none',
+    width: '60%',
+    height: 500,
+    overflow: 'auto'
+};

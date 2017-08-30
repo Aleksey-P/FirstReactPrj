@@ -19,7 +19,7 @@ export class MainPage extends React.Component {
     selectFoodElementHandler(foodName) {
         const currentFoodArray = this.state.foodArray.slice();
         const foodElementIndex = currentFoodArray.findIndex((curr) => curr.foodName === foodName);
-        const newSelectedArray = this.toggleSelectedElement(currentFoodArray, foodElementIndex, false);
+        const newSelectedArray = this.toggleSelectedElement(currentFoodArray, foodElementIndex);
 
         currentFoodArray[foodElementIndex].isSelected = !currentFoodArray[foodElementIndex].isSelected;
         this.setState({
@@ -40,20 +40,24 @@ export class MainPage extends React.Component {
         let currentFoodArray = this.state.foodArray.slice();
         const foodElementIndex = currentFoodArray.findIndex((curr) => curr.foodName === foodName);
         currentFoodArray.splice(foodElementIndex, 1);
-        const newSelectedArray = this.toggleSelectedElement(currentFoodArray, foodElementIndex, true);
+        const currentSelectedFoodArray = this.state.selectedFood.slice();
+        const selectedElementIndex = currentSelectedFoodArray.indexOf(currentFoodArray[foodElementIndex]);
+        if (selectedElementIndex > -1) {
+            currentSelectedFoodArray.splice(selectedElementIndex, 1);
+        }
 
         this.setState({
             foodArray: currentFoodArray,
-            selectedFood: newSelectedArray
+            selectedFood: currentSelectedFoodArray
         });
     }
 
-    toggleSelectedElement(currentFoodArray, index, isDeleting) {
+    toggleSelectedElement(currentFoodArray, index) {
         const currentSelectedFoodArray = this.state.selectedFood.slice();
         const selectedElementIndex = currentSelectedFoodArray.indexOf(currentFoodArray[index]);
-        if (selectedElementIndex === -1 && !isDeleting) {
+        if (selectedElementIndex === -1) {
             currentSelectedFoodArray.push(currentFoodArray[index]);
-        }else {
+        } else {
             currentSelectedFoodArray.splice(selectedElementIndex, 1);
         }
 
@@ -63,14 +67,24 @@ export class MainPage extends React.Component {
     render() {
         return (
             <div>
-                <FoodList
-                    foodArray={this.state.foodArray}
-                    deleteFoodElementHandler={this.deleteFoodElementHandler}
-                    selectFoodElementHandler={this.selectFoodElementHandler}
-                />
+                <div style={styles.flexContainer}>
+                    <FoodList
+                        foodArray={this.state.foodArray}
+                        deleteFoodElementHandler={this.deleteFoodElementHandler}
+                        selectFoodElementHandler={this.selectFoodElementHandler}
+                    />
+                    <AddFood createFoodElementHandler={this.createFoodElementHandler}/>
+                </div>
                 <RollFood selectedFood={this.state.selectedFood}/>
-                <AddFood createFoodElementHandler={this.createFoodElementHandler}/>
             </div>
-    );
+        );
     }
 }
+
+const styles = {
+    flexContainer: {
+        display: 'flex',
+        justifyContent: 'space-around',
+        alignContent: 'stretch'
+    }
+};
