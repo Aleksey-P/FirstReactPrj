@@ -29,7 +29,7 @@ export class RollFood extends React.Component {
         if (this.state.rolledFood) {
             return (
                 <div>
-                    <div>{`${this.state.rolledFood.foodName} $${this.state.rolledFood.foodPrice}`}</div>
+                    <div>{`${this.state.rolledFood.foodName}`}</div>
                     <button onClick={this.onClickHandler}>ROLL!</button>
                 </div>
             );

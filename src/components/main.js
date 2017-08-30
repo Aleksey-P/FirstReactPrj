@@ -19,17 +19,11 @@ export class MainPage extends React.Component {
     selectFoodElementHandler(foodName) {
         const currentFoodArray = this.state.foodArray.slice();
         const foodElementIndex = currentFoodArray.findIndex((curr) => curr.foodName === foodName);
-        const currentSelectedFoodArray = this.state.selectedFood.slice();
-        const selectedElementIndex = currentSelectedFoodArray.indexOf(currentFoodArray[foodElementIndex]);
-        if (selectedElementIndex === -1) {
-            currentSelectedFoodArray.push(currentFoodArray[foodElementIndex]);
-        }else {
-            currentSelectedFoodArray.splice(selectedElementIndex, 1);
-        }
+        const newSelectedArray = this.toggleSelectedElement(currentFoodArray, foodElementIndex, false);
 
         currentFoodArray[foodElementIndex].isSelected = !currentFoodArray[foodElementIndex].isSelected;
         this.setState({
-            selectedFood: currentSelectedFoodArray,
+            selectedFood: newSelectedArray,
             foodArray: currentFoodArray
         });
     }
@@ -46,10 +40,24 @@ export class MainPage extends React.Component {
         let currentFoodArray = this.state.foodArray.slice();
         const foodElementIndex = currentFoodArray.findIndex((curr) => curr.foodName === foodName);
         currentFoodArray.splice(foodElementIndex, 1);
+        const newSelectedArray = this.toggleSelectedElement(currentFoodArray, foodElementIndex, true);
 
         this.setState({
-            foodArray: currentFoodArray
+            foodArray: currentFoodArray,
+            selectedFood: newSelectedArray
         });
+    }
+
+    toggleSelectedElement(currentFoodArray, index, isDeleting) {
+        const currentSelectedFoodArray = this.state.selectedFood.slice();
+        const selectedElementIndex = currentSelectedFoodArray.indexOf(currentFoodArray[index]);
+        if (selectedElementIndex === -1 && !isDeleting) {
+            currentSelectedFoodArray.push(currentFoodArray[index]);
+        }else {
+            currentSelectedFoodArray.splice(selectedElementIndex, 1);
+        }
+
+        return currentSelectedFoodArray;
     }
 
     render() {
@@ -60,8 +68,8 @@ export class MainPage extends React.Component {
                     deleteFoodElementHandler={this.deleteFoodElementHandler}
                     selectFoodElementHandler={this.selectFoodElementHandler}
                 />
-                <AddFood createFoodElementHandler={this.createFoodElementHandler}/>
                 <RollFood selectedFood={this.state.selectedFood}/>
+                <AddFood createFoodElementHandler={this.createFoodElementHandler}/>
             </div>
     );
     }
